@@ -22,15 +22,24 @@ async function run() {
     await client.connect();
     const database = client.db("travel_bd");
     const tourservice = database.collection("tour");
+    const username = database.collection("user_name");
     //custom api
     app.get("/tour", async (req, res) => {
       const cursor = tourservice.find({});
       const services = await cursor.toArray();
       res.send(services);
+      res.json(services);
     });
 
     app.get("/home", (req, res) => {
       res.send("mongo connect");
+    });
+
+    app.post("/tour", async (req, res) => {
+      const servic = req.body;
+      console.log(servic);
+      const result = await username.insertOne(servic);
+      res.json(result);
     });
   } finally {
     //await client.close();
